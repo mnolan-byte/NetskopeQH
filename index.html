@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Netskope × Quaker Houghton</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+  :root {
+    --bg: #0a0e1a;
+    --surface: #111827;
+    --surface2: #1a2236;
+    --border: #1e2d45;
+    --ns-blue: #0066ff;
+    --ns-cyan: #00c8ff;
+    --ns-glow: rgba(0, 102, 255, 0.15);
+    --text-primary: #f0f4ff;
+    --text-secondary: #8899bb;
+    --text-muted: #4a5a7a;
+    --green: #00e5a0;
+    --amber: #ffb020;
+    --red: #ff4d6a;
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-body: 'Inter', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── GRID LINES BACKGROUND ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,102,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,102,255,0.03) 1px, transparent 1px);
+    background-size: 48px 48px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container { max-width: 1080px; margin: 0 auto; padding: 0 32px; position: relative; z-index: 1; }
+
+  /* ── HEADER ── */
+  header {
+    padding: 28px 0 20px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .logo-mark {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .logo-icon {
+    width: 36px; height: 36px;
+    background: linear-gradient(135deg, var(--ns-blue), var(--ns-cyan));
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 13px; color: white;
+    font-family: var(--font-display);
+    letter-spacing: -0.5px;
+  }
+  .logo-text { font-family: var(--font-display); font-weight: 600; font-size: 15px; color: var(--text-primary); }
+  .header-badge {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    letter-spacing: 0.5px;
+  }
+  .header-badge span { color: var(--ns-cyan); font-weight: 600; }
+
+  /* ── HERO ── */
+  .hero {
+    padding: 72px 0 56px;
+    text-align: center;
+  }
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0,200,255,0.08);
+    border: 1px solid rgba(0,200,255,0.2);
+    border-radius: 20px;
+    padding: 6px 16px;
+    font-size: 12px;
+    color: var(--ns-cyan);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+    font-weight: 500;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: var(--ns-cyan);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.7); }
+  }
+  .hero h1 {
+    font-family: var(--font-display);
+    font-size: clamp(32px, 5vw, 52px);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -1.5px;
+    color: var(--text-primary);
+    margin-bottom: 20px;
+  }
+  .hero h1 .accent {
+    background: linear-gradient(90deg, var(--ns-blue), var(--ns-cyan));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero-sub {
+    font-size: 17px;
+    color: var(--text-secondary);
+    max-width: 580px;
+    margin: 0 auto 48px;
+    line-height: 1.6;
+    font-weight: 400;
+  }
+
+  /* ── STATS BAR ── */
+  .stats-bar {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 72px;
+  }
+  .stat-cell {
+    background: var(--surface);
+    padding: 22px 16px;
+    text-align: center;
+    transition: background 0.2s;
+  }
+  .stat-cell:hover { background: var(--surface2); }
+  .stat-num {
+    font-family: var(--font-display);
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--text-primary);
+    display: block;
+    letter-spacing: -0.5px;
+  }
+  .stat-num.blue { color: var(--ns-blue); }
+  .stat-num.cyan { color: var(--ns-cyan); }
+  .stat-num.green { color: var(--green); }
+  .stat-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-top: 4px;
+    display: block;
+    line-height: 1.4;
+  }
+
+  /* ── SECTION HEADERS ── */
+  .section { margin-bottom: 64px; }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .section-num {
+    width: 28px; height: 28px;
+    border: 1px solid var(--ns-blue);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px;
+    color: var(--ns-blue);
+    font-family: var(--font-display);
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+  .section-title {
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text-primary);
+    letter-spacing: -0.3px;
+  }
+  .section-line {
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* ── USE CASE CARDS ── */
+  .use-case-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .use-case-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .use-case-card:hover {
+    border-color: var(--ns-blue);
+    transform: translateY(-2px);
+  }
+  .use-case-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--ns-blue), var(--ns-cyan));
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .use-case-card:hover::before { opacity: 1; }
+  .use-case-card.full-width { grid-column: 1 / -1; }
+
+  .card-icon {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    margin-bottom: 16px;
+    background: rgba(0,102,255,0.1);
+    border: 1px solid rgba(0,102,255,0.2);
+  }
+  .card-title {
+    font-family: var(--font-display);
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+    letter-spacing: -0.2px;
+  }
+  .card-subtitle {
+    font-size: 12px;
+    color: var(--ns-cyan);
+    font-weight: 500;
+    margin-bottom: 14px;
+    letter-spacing: 0.3px;
+  }
+  .card-body {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.65;
+  }
+  .card-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 16px;
+  }
+  .pill {
+    background: rgba(0,102,255,0.1);
+    border: 1px solid rgba(0,102,255,0.2);
+    border-radius: 20px;
+    padding: 3px 10px;
+    font-size: 11px;
+    color: var(--ns-blue);
+    font-weight: 500;
+  }
+  .pill.green {
+    background: rgba(0,229,160,0.08);
+    border-color: rgba(0,229,160,0.2);
+    color: var(--green);
+  }
+  .pill.amber {
+    background: rgba(255,176,32,0.08);
+    border-color: rgba(255,176,32,0.2);
+    color: var(--amber);
+  }
+
+  /* ── CHALLENGE vs NETSKOPE TABLE ── */
+  .challenge-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+  .challenge-table thead tr {
+    border-bottom: 1px solid var(--border);
+  }
+  .challenge-table thead th {
+    padding: 12px 16px;
+    text-align: left;
+    font-family: var(--font-display);
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--text-muted);
+  }
+  .challenge-table thead th.ns-col { color: var(--ns-blue); }
+  .challenge-table tbody tr {
+    border-bottom: 1px solid rgba(30,45,69,0.6);
+    transition: background 0.15s;
+  }
+  .challenge-table tbody tr:hover { background: var(--surface2); }
+  .challenge-table tbody td {
+    padding: 16px;
+    vertical-align: top;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+  .challenge-table tbody td:first-child {
+    color: var(--text-primary);
+    font-weight: 500;
+  }
+  .challenge-table tbody td .pain {
+    color: var(--red);
+    font-size: 12px;
+    margin-top: 4px;
+    display: block;
+  }
+  .challenge-table tbody td .solve {
+    color: var(--green);
+    font-size: 13px;
+    display: flex; align-items: flex-start; gap: 6px;
+  }
+  .check { color: var(--green); }
+
+  /* ── WHY NETSKOPE WIN ── */
+  .win-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .win-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    text-align: center;
+  }
+  .win-metric {
+    font-family: var(--font-display);
+    font-size: 36px;
+    font-weight: 700;
+    letter-spacing: -1px;
+    background: linear-gradient(135deg, var(--ns-blue), var(--ns-cyan));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    display: block;
+    margin-bottom: 6px;
+  }
+  .win-label {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  /* ── CTA ── */
+  .cta-section {
+    background: linear-gradient(135deg, rgba(0,102,255,0.12), rgba(0,200,255,0.06));
+    border: 1px solid rgba(0,102,255,0.25);
+    border-radius: 16px;
+    padding: 48px 40px;
+    text-align: center;
+    margin-bottom: 48px;
+  }
+  .cta-section h2 {
+    font-family: var(--font-display);
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 12px;
+  }
+  .cta-section p {
+    color: var(--text-secondary);
+    font-size: 15px;
+    margin-bottom: 32px;
+    max-width: 480px;
+    margin-left: auto; margin-right: auto;
+    line-height: 1.6;
+  }
+  .cta-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--ns-blue);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 24px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: var(--font-body);
+    transition: background 0.2s, transform 0.1s;
+  }
+  .btn-primary:hover { background: #0055dd; transform: translateY(-1px); }
+  .btn-secondary {
+    background: transparent;
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 24px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: var(--font-body);
+    transition: border-color 0.2s;
+  }
+  .btn-secondary:hover { border-color: var(--ns-blue); color: var(--ns-blue); }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 24px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  /* ── GLOBAL SITES MAP VISUAL ── */
+  .sites-visual {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px;
+    display: flex;
+    align-items: center;
+    gap: 32px;
+  }
+  .donut-wrap {
+    position: relative;
+    width: 120px; height: 120px;
+    flex-shrink: 0;
+  }
+  .donut-wrap svg { width: 100%; height: 100%; }
+  .donut-center {
+    position: absolute;
+    inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column;
+    text-align: center;
+  }
+  .donut-center strong {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text-primary);
+    display: block;
+    line-height: 1;
+  }
+  .donut-center small {
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .sites-detail { flex: 1; }
+  .sites-detail h4 {
+    font-family: var(--font-display);
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 14px;
+    color: var(--text-primary);
+  }
+  .site-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+  .site-bar-track {
+    flex: 1;
+    height: 6px;
+    background: var(--surface2);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .site-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    background: linear-gradient(90deg, var(--ns-blue), var(--ns-cyan));
+  }
+  .site-val {
+    font-family: var(--font-display);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-primary);
+    width: 30px;
+    text-align: right;
+  }
+  .site-name { width: 140px; font-size: 12px; }
+
+  @media (max-width: 680px) {
+    .use-case-grid, .win-grid { grid-template-columns: 1fr; }
+    .stats-bar { grid-template-columns: repeat(3, 1fr); }
+    .sites-visual { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <div class="header-inner">
+      <div class="logo-mark">
+        <div class="logo-icon">NS</div>
+        <span class="logo-text">Netskope</span>
+      </div>
+      <div class="header-badge">Prepared for <span>Quaker Houghton</span></div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="container">
+
+    <!-- HERO -->
+    <div class="hero">
+      <div class="hero-eyebrow">Confidential · Solution Brief</div>
+      <h1>One Platform.<br><span class="accent">Every Edge of Your Business.</span></h1>
+      <p class="hero-sub">Quaker Houghton operates across 73 global sites, 3,000 remote workers, and a growing OT/IoT footprint. Netskope's SASE platform unifies security and networking without compromise.</p>
+    </div>
+
+    <!-- STATS BAR -->
+    <div class="stats-bar">
+      <div class="stat-cell">
+        <span class="stat-num blue">73</span>
+        <span class="stat-label">Global Sites</span>
+      </div>
+      <div class="stat-cell">
+        <span class="stat-num cyan">6.5K</span>
+        <span class="stat-label">Mbps Pooled BW</span>
+      </div>
+      <div class="stat-cell">
+        <span class="stat-num blue">3,000</span>
+        <span class="stat-label">Remote Users</span>
+      </div>
+      <div class="stat-cell">
+        <span class="stat-num green">63</span>
+        <span class="stat-label">Sites w/ Last Mile</span>
+      </div>
+      <div class="stat-cell">
+        <span class="stat-num cyan">OT/IoT</span>
+        <span class="stat-label">Fingerprinting</span>
+      </div>
+    </div>
+
+    <!-- SECTION 1: USE CASES -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-num">1</div>
+        <div class="section-title">How Netskope Solves Each Requirement</div>
+        <div class="section-line"></div>
+      </div>
+
+      <div class="use-case-grid">
+
+        <!-- Card 1: Pooled Bandwidth -->
+        <div class="use-case-card">
+          <div class="card-icon">🌐</div>
+          <div class="card-title">73 Sites · 6.5 Gbps Pooled Bandwidth</div>
+          <div class="card-subtitle">Netskope Borderless WAN</div>
+          <div class="card-body">
+            Netskope's NewEdge network — the world's largest dedicated security private cloud — delivers traffic directly from the nearest PoP, eliminating backhauling. Bandwidth pooling across all 73 sites is managed dynamically: sites that need less yield capacity to high-demand locations automatically. QH gets consistent sub-10ms latency to SaaS applications and predictable costs.
+          </div>
+          <div class="card-pills">
+            <span class="pill">Dynamic Traffic Steering</span>
+            <span class="pill">SD-WAN Integration</span>
+            <span class="pill green">No Backhaul</span>
+          </div>
+        </div>
+
+        <!-- Card 2: ZTNA -->
+        <div class="use-case-card">
+          <div class="card-icon">🔐</div>
+          <div class="card-title">3,000 Remote Users · ZTNA</div>
+          <div class="card-subtitle">Netskope Private Access (NPA)</div>
+          <div class="card-body">
+            Replace legacy VPN with identity-aware, least-privilege access. NPA verifies user, device posture, and context before granting access to a specific application — never the full network. For remote workers accessing manufacturing ERP, R&D systems, or collaboration tools, this eliminates lateral movement risk while delivering a faster experience than traditional VPN hairpinning.
+          </div>
+          <div class="card-pills">
+            <span class="pill">Least-Privilege Access</span>
+            <span class="pill">Device Posture Checks</span>
+            <span class="pill amber">VPN Replacement</span>
+          </div>
+        </div>
+
+        <!-- Card 3: IDS/IPS -->
+        <div class="use-case-card">
+          <div class="card-icon">🛡️</div>
+          <div class="card-title">Threat Prevention · IDS/IPS</div>
+          <div class="card-subtitle">Netskope Threat Protection + Inline IPS</div>
+          <div class="card-body">
+            Netskope inspects all traffic inline — including encrypted TLS — across web, cloud, and private app traffic without performance degradation. Intrusion detection and prevention signatures are updated in real time by Netskope Threat Labs. For QH's manufacturing and chemical IP environment, this means advanced threat signatures targeting industrial sectors are applied automatically, with no hardware appliance refresh cycles.
+          </div>
+          <div class="card-pills">
+            <span class="pill">TLS Inspection</span>
+            <span class="pill">Netskope Threat Labs</span>
+            <span class="pill green">Zero Hardware</span>
+          </div>
+        </div>
+
+        <!-- Card 4: Last Mile Monitoring -->
+        <div class="use-case-card">
+          <div class="card-icon">📡</div>
+          <div class="card-title">63 Sites · Last Mile Monitoring</div>
+          <div class="card-subtitle">Netskope Digital Experience Management (DEM)</div>
+          <div class="card-body">
+            DEM provides continuous visibility into the last-mile connectivity health at each site — ISP performance, jitter, packet loss, and application experience. When a site in São Paulo or Singapore degrades, Netskope identifies whether the issue is the ISP, middle mile, or the application itself, and can automatically reroute or alert your team. For 63 geographically dispersed QH sites, this replaces reactive helpdesk tickets with proactive resolution.
+          </div>
+          <div class="card-pills">
+            <span class="pill">ISP Health Monitoring</span>
+            <span class="pill">Auto-Remediation</span>
+            <span class="pill amber">Proactive Alerting</span>
+          </div>
+        </div>
+
+        <!-- Card 5: OT/IoT - Full Width -->
+        <div class="use-case-card full-width">
+          <div class="card-icon">🏭</div>
+          <div class="card-title">OT/IoT Fingerprinting & Device Mapping</div>
+          <div class="card-subtitle">Netskope IoT Security + OT Visibility</div>
+          <div class="card-body">
+            Quaker Houghton's manufacturing floors contain hundreds of unmanaged OT devices — PLCs, SCADA systems, sensors, and industrial controllers — that cannot run traditional agents. Netskope fingerprints these devices passively using behavioral patterns, protocol analysis, and network signatures to build an authoritative device inventory. Each device is categorized by type, manufacturer, OS, and risk posture. Anomalous behavior — a temperature sensor suddenly initiating outbound connections, or an HMI communicating with an unknown external IP — triggers automated policy enforcement without disrupting production. This gives QH's security team a live map of every device across all manufacturing sites without touching a single endpoint.
+          </div>
+          <div class="card-pills">
+            <span class="pill">Agentless Fingerprinting</span>
+            <span class="pill">Behavioral Baselining</span>
+            <span class="pill green">SCADA/ICS Aware</span>
+            <span class="pill">Automated Containment</span>
+            <span class="pill amber">Zero Production Impact</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- SECTION 2: CHALLENGE TABLE -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-num">2</div>
+        <div class="section-title">Current Pain → Netskope Resolution</div>
+        <div class="section-line"></div>
+      </div>
+
+      <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden;">
+        <table class="challenge-table">
+          <thead>
+            <tr>
+              <th style="width:22%">Challenge Area</th>
+              <th style="width:36%">Likely Current State</th>
+              <th class="ns-col" style="width:42%">Netskope Resolution</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                Global WAN Costs
+                <span class="pain">↑ Bandwidth bills as sites scale</span>
+              </td>
+              <td>MPLS or regional breakouts per site with dedicated circuits, expensive overprovisioning</td>
+              <td><span class="solve"><span class="check">✓</span> Pooled 6.5 Gbps across all 73 sites via NewEdge PoPs; traffic uses optimal path dynamically, reducing wasteful overprovisioning by site</span></td>
+            </tr>
+            <tr>
+              <td>
+                Remote Access
+                <span class="pain">VPN sprawl, ticket volume</span>
+              </td>
+              <td>Legacy VPN (Pulse, Cisco AnyConnect, GlobalProtect) creating wide network access, slow connections, helpdesk burden</td>
+              <td><span class="solve"><span class="check">✓</span> NPA replaces VPN with per-app tunnels; 3,000 remote users get faster access, zero lateral movement, and device posture enforcement</span></td>
+            </tr>
+            <tr>
+              <td>
+                Threat Visibility
+                <span class="pain">Blind spots in encrypted traffic</span>
+              </td>
+              <td>Perimeter firewalls that can't inspect TLS at scale; threats traversing cloud apps undetected</td>
+              <td><span class="solve"><span class="check">✓</span> Inline TLS inspection across all 73 sites with IDS/IPS signatures updated by Threat Labs; no appliance refresh cycles</span></td>
+            </tr>
+            <tr>
+              <td>
+                ISP Outages
+                <span class="pain">Reactive, slow MTTR</span>
+              </td>
+              <td>Sites go dark, users call helpdesk, teams manually diagnose whether issue is ISP, WAN, or application</td>
+              <td><span class="solve"><span class="check">✓</span> DEM monitors all 63 flagged sites 24/7; Netskope pinpoints issue layer (last mile, middle mile, app) and auto-routes or alerts before users notice</span></td>
+            </tr>
+            <tr>
+              <td>
+                OT Device Inventory
+                <span class="pain">Unknown devices on network</span>
+              </td>
+              <td>No authoritative inventory of PLCs, SCADA, HMIs; security team can't see what's on the OT network, can't enforce policies</td>
+              <td><span class="solve"><span class="check">✓</span> Agentless fingerprinting builds live device map; behavioral baselining flags anomalies; policy enforcement without production disruption</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- SECTION 3: SITE COVERAGE VISUAL -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-num">3</div>
+        <div class="section-title">Site Coverage Overview</div>
+        <div class="section-line"></div>
+      </div>
+
+      <div class="sites-visual">
+        <div class="donut-wrap">
+          <svg viewBox="0 0 120 120">
+            <!-- Full circle background -->
+            <circle cx="60" cy="60" r="50" fill="none" stroke="#1a2236" stroke-width="14"/>
+            <!-- Last Mile: 63/73 = 86% = 311deg -->
+            <circle cx="60" cy="60" r="50" fill="none"
+              stroke="url(#grd)" stroke-width="14"
+              stroke-dasharray="271 43"
+              stroke-dashoffset="0"
+              stroke-linecap="round"
+              transform="rotate(-90 60 60)"/>
+            <defs>
+              <linearGradient id="grd" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#0066ff"/>
+                <stop offset="100%" stop-color="#00c8ff"/>
+              </linearGradient>
+            </defs>
+          </svg>
+          <div class="donut-center">
+            <strong>63</strong>
+            <small>/ 73 sites</small>
+          </div>
+        </div>
+        <div class="sites-detail">
+          <h4>Netskope Coverage by Workstream</h4>
+          <div class="site-row">
+            <span class="site-name">Borderless WAN</span>
+            <div class="site-bar-track"><div class="site-bar-fill" style="width:100%"></div></div>
+            <span class="site-val">73</span>
+          </div>
+          <div class="site-row">
+            <span class="site-name">IDS/IPS Protection</span>
+            <div class="site-bar-track"><div class="site-bar-fill" style="width:100%"></div></div>
+            <span class="site-val">73</span>
+          </div>
+          <div class="site-row">
+            <span class="site-name">Last Mile DEM</span>
+            <div class="site-bar-track"><div class="site-bar-fill" style="width:86%"></div></div>
+            <span class="site-val">63</span>
+          </div>
+          <div class="site-row">
+            <span class="site-name">OT/IoT Fingerprint</span>
+            <div class="site-bar-track"><div class="site-bar-fill" style="width:75%"></div></div>
+            <span class="site-val">~55</span>
+          </div>
+          <div class="site-row">
+            <span class="site-name">ZTNA (Remote)</span>
+            <div class="site-bar-track"><div class="site-bar-fill" style="width:100%"></div></div>
+            <span class="site-val">3K</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 4: WHY NETSKOPE WINS -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-num">4</div>
+        <div class="section-title">Why Netskope Wins for QH</div>
+        <div class="section-line"></div>
+      </div>
+
+      <div class="win-grid">
+        <div class="win-card">
+          <span class="win-metric">#1</span>
+          <span class="win-label">Gartner-ranked SSE platform, purpose-built for enterprises with complex OT/IT environments</span>
+        </div>
+        <div class="win-card">
+          <span class="win-metric">65+</span>
+          <span class="win-label">NewEdge PoPs globally — QH sites get local egress, not backhauled traffic</span>
+        </div>
+        <div class="win-card">
+          <span class="win-metric">Single</span>
+          <span class="win-label">Unified agent and console across ZTNA, SWG, CASB, DEM, and OT security — no vendor sprawl</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="cta-section">
+      <h2>Ready to Run a Proof of Value?</h2>
+      <p>A 30-day PoV can cover all five use cases with QH's own traffic — no architectural changes required to get started.</p>
+      <div class="cta-buttons">
+        <button class="btn-primary">Request PoV Scoping Call</button>
+        <button class="btn-secondary">Download Executive Summary</button>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  <div class="container" style="display:flex; justify-content:space-between; width:100%;">
+    <span>© 2026 Netskope, Inc. — Confidential</span>
+    <span>Prepared for Quaker Houghton · Matt · Regional Sales Manager</span>
+  </div>
+</footer>
+
+</body>
+</html>
